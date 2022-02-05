@@ -44,14 +44,20 @@ def predict():
 		# convert input data to month number
 		d = datetime.datetime.strptime(date, '%Y-%m-%d')
 		month = d.strftime("%m").lstrip("0").replace(" 0", " ")
-		key = "month_" + str(month)
+		key_month = "month_" + str(month)
+
+		# convert input data to day number
+		day = d.strftime("%d").lstrip("0").replace(" 0", " ")
+		key_day = "day_" + str(day)
 
 		# create Test_dataset
-		col_month = ["month_" + str(i)  for i in range(1, 13)] # column names into Test dataset
-		df_months = pd.DataFrame(0, index=range(1), columns=col_month)
-		df_months.loc[0, key] = 1
+		col_months = ["month_" + str(i) for i in range(1, 13)] # column names into Test dataset
+		col_days = ["day_" + str(i) for i in range(1, 32)]  # column names into Test dataset
+
+		df_months_days = pd.DataFrame(0, index=range(1), columns=col_months + col_days)
+		df_months_days.loc[0, [key_month, key_day]] = 1
 		final_df = pd.DataFrame({"wsbp.csv": [wsbp], "wsrh.csv": [wsrh], "wsth.csv": [wsth]})
-		final_df = final_df.merge(df_months, left_index=True, right_index=True)
+		final_df = final_df.merge(df_months_days, left_index=True, right_index=True)
 
 		# get predicts
 		predicts = model.predict(final_df)
