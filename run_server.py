@@ -59,6 +59,11 @@ def predict():
 		final_df = pd.DataFrame({"wsbp.csv": [wsbp], "wsrh.csv": [wsrh], "wsth.csv": [wsth]})
 		final_df = final_df.merge(df_months_days, left_index=True, right_index=True)
 
+		# insert new generated columns
+		final_df["wsrh_wsth"] = final_df["wsrh.csv"] * final_df["wsth.csv"] * final_df["wsbp.csv"]
+		final_df["day_month"] = int(month) * int(day)
+
+
 		# get predicts
 		predicts = model.predict(final_df)
 
